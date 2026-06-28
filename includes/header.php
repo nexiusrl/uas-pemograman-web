@@ -47,21 +47,6 @@ if ($current_dir === "admin") {
           <li class="nav-item px-2">
             <a class="nav-link" href="<?php echo $path_prefix; ?>index.php#kontak">Hubungi Kami</a>
           </li>
-          <?php if (
-            isset($_SESSION["admin_logged_in"]) &&
-            $_SESSION["admin_logged_in"] === true
-          ): ?>
-            <li class="nav-item px-2">
-              <a class="nav-link" href="<?php echo $path_prefix; ?>admin/dashboard.php">Dashboard</a>
-            </li>
-            <li class="nav-item px-2">
-              <a class="nav-link" href="<?php echo $path_prefix; ?>admin/messages.php">Pesan</a>
-            </li>
-            <li class="nav-item ms-lg-4">
-              <a class="btn btn-danger text-white px-4 py-2 d-inline-block" href="<?php echo $path_prefix; ?>logout.php"
-                style="font-size: 0.75rem; text-decoration: none;">Keluar</a>
-            </li>
-          <?php endif; ?>
         </ul>
       </div>
     </div>
