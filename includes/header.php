@@ -1,13 +1,13 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 // Deteksi path prefix dinamis untuk subfolder (seperti folder admin)
-$path_prefix = '';
-$current_dir = basename(dirname($_SERVER['PHP_SELF']));
-if ($current_dir === 'admin') {
-    $path_prefix = '../';
+$path_prefix = "";
+$current_dir = basename(dirname($_SERVER["PHP_SELF"]));
+if ($current_dir === "admin") {
+  $path_prefix = "../";
 }
 ?>
 <!doctype html>
@@ -47,7 +47,10 @@ if ($current_dir === 'admin') {
           <li class="nav-item px-2">
             <a class="nav-link" href="<?php echo $path_prefix; ?>index.php#kontak">Hubungi Kami</a>
           </li>
-          <?php if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true): ?>
+          <?php if (
+            isset($_SESSION["admin_logged_in"]) &&
+            $_SESSION["admin_logged_in"] === true
+          ): ?>
             <li class="nav-item px-2">
               <a class="nav-link" href="<?php echo $path_prefix; ?>admin/dashboard.php">Dashboard</a>
             </li>
@@ -57,11 +60,6 @@ if ($current_dir === 'admin') {
             <li class="nav-item ms-lg-4">
               <a class="btn btn-danger text-white px-4 py-2 d-inline-block" href="<?php echo $path_prefix; ?>logout.php"
                 style="font-size: 0.75rem; text-decoration: none;">Keluar</a>
-            </li>
-          <?php else: ?>
-            <li class="nav-item ms-lg-4">
-              <a class="btn btn-dark-minimal text-white px-4 py-2 d-inline-block" href="<?php echo $path_prefix; ?>login.php"
-                style="font-size: 0.75rem; text-decoration: none;">Akses Staf</a>
             </li>
           <?php endif; ?>
         </ul>
