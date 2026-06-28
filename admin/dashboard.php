@@ -1,32 +1,32 @@
 <?php
-require_once '../includes/db.php';
-require_once '../includes/auth.php';
+require_once "../includes/db.php";
+require_once "../includes/auth.php";
 
 // Ambil semua unit dari database
 $query = "SELECT * FROM housing_units ORDER BY id DESC";
 $result = mysqli_query($conn, $query);
 $units = [];
 if ($result) {
-while ($row = mysqli_fetch_assoc($result)) {
-  $units[] = $row;
-}
+  while ($row = mysqli_fetch_assoc($result)) {
+    $units[] = $row;
+  }
 } else {
-die("Gagal memuat data: " . mysqli_error($conn));
+  die("Gagal memuat data: " . mysqli_error($conn));
 }
 
 // Ambil ringkasan statistik stok untuk masing-masing tipe perumahan
-$stats_query = "SELECT nama_unit, 
+$stats_query = "SELECT nama_unit,
             COUNT(CASE WHEN status = 'Tersedia' THEN 1 END) AS stok_tersedia,
             COUNT(*) AS total_unit
-        FROM housing_units 
+        FROM housing_units
         GROUP BY nama_unit
         ORDER BY nama_unit ASC";
 $stats_result = mysqli_query($conn, $stats_query);
 $stats = [];
 if ($stats_result) {
-while ($row = mysqli_fetch_assoc($stats_result)) {
-  $stats[] = $row;
-}
+  while ($row = mysqli_fetch_assoc($stats_result)) {
+    $stats[] = $row;
+  }
 }
 ?>
 <!doctype html>
@@ -87,22 +87,22 @@ while ($row = mysqli_fetch_assoc($stats_result)) {
   </a>
   </div>
 
-  <?php if (isset($_GET['status']) && $_GET['status'] === 'added'): ?>
+  <?php if (isset($_GET["status"]) && $_GET["status"] === "added"): ?>
   <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
     <i class="bi bi-check-circle-fill me-2"></i> Unit perumahan berhasil ditambahkan!
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
-  <?php elseif (isset($_GET['status']) && $_GET['status'] === 'updated'): ?>
+  <?php elseif (isset($_GET["status"]) && $_GET["status"] === "updated"): ?>
   <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
     <i class="bi bi-check-circle-fill me-2"></i> Unit perumahan berhasil diperbarui!
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
-  <?php elseif (isset($_GET['status']) && $_GET['status'] === 'deleted'): ?>
+  <?php elseif (isset($_GET["status"]) && $_GET["status"] === "deleted"): ?>
   <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
     <i class="bi bi-check-circle-fill me-2"></i> Unit perumahan berhasil dihapus!
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
-  <?php elseif (isset($_GET['status']) && $_GET['status'] === 'error'): ?>
+  <?php elseif (isset($_GET["status"]) && $_GET["status"] === "error"): ?>
   <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
     <i class="bi bi-exclamation-triangle-fill me-2"></i> Terjadi kesalahan dalam memproses data.
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -112,19 +112,27 @@ while ($row = mysqli_fetch_assoc($stats_result)) {
   <!-- Statistics Section -->
   <div class="row g-3 mb-4">
     <?php foreach ($stats as $stat): ?>
-    <?php 
-    $pct = $stat['total_unit'] > 0 ? round(($stat['stok_tersedia'] / $stat['total_unit']) * 100) : 0;
-    $bar_color = $pct > 50 ? 'bg-success' : ($pct > 20 ? 'bg-warning' : 'bg-danger');
+    <?php
+    $pct =
+      $stat["total_unit"] > 0
+        ? round(($stat["stok_tersedia"] / $stat["total_unit"]) * 100)
+        : 0;
+    $bar_color =
+      $pct > 50 ? "bg-success" : ($pct > 20 ? "bg-warning" : "bg-danger");
     ?>
     <div class="col-md-4">
     <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
       <div class="card-body p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
         <h6 class="text-uppercase text-muted fw-bold mb-0" style="font-size: 0.75rem; letter-spacing: 0.5px;">
-        <?php echo htmlspecialchars($stat['nama_unit']); ?>
+        <?php echo htmlspecialchars($stat["nama_unit"]); ?>
         </h6>
-        <span class="badge <?php echo $stat['stok_tersedia'] > 0 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'; ?> rounded-pill px-3 py-1 fw-semibold" style="font-size: 0.7rem;">
-        <?php echo $stat['stok_tersedia']; ?> / <?php echo $stat['total_unit']; ?> Tersedia
+        <span class="badge <?php echo $stat["stok_tersedia"] > 0
+          ? "bg-success-subtle text-success"
+          : "bg-danger-subtle text-danger"; ?> rounded-pill px-3 py-1 fw-semibold" style="font-size: 0.7rem;">
+        <?php echo $stat["stok_tersedia"]; ?> / <?php echo $stat[
+   "total_unit"
+ ]; ?> Tersedia
         </span>
         </div>
         <div class="progress" style="height: 6px; background-color: #f1f3f5; border-radius: 10px;">
@@ -165,32 +173,57 @@ while ($row = mysqli_fetch_assoc($stats_result)) {
       <td colspan="7" class="text-center py-4 text-muted">Belum ada unit terdaftar.</td>
     </tr>
     <?php else: ?>
-    <?php $no = 1; foreach ($units as $unit): ?>
+    <?php
+    $no = 1;
+    foreach ($units as $unit): ?>
       <tr>
       <td class="px-3 border-bottom"><?php echo $no++; ?></td>
       <td class="border-bottom">
-      <img src="../img/<?php echo htmlspecialchars($unit['gambar']); ?>" alt="Unit" class="rounded-2 object-fit-cover shadow-sm" style="width: 80px; height: 50px;" />
+      <img src="../img/<?php echo htmlspecialchars(
+        $unit["gambar"],
+      ); ?>" alt="Unit" class="rounded-2 object-fit-cover shadow-sm" style="width: 80px; height: 50px;" />
       </td>
-      <td class="fw-bold border-bottom"><?php echo htmlspecialchars($unit['nama_unit']); ?></td>
-      <td class="border-bottom"><?php echo htmlspecialchars($unit['tipe']); ?></td>
-      <td class="border-bottom">Rp <?php echo number_format($unit['harga'], 0, ',', '.'); ?></td>
+      <td class="fw-bold border-bottom"><?php echo htmlspecialchars(
+        $unit["nama_unit"],
+      ); ?></td>
+      <td class="border-bottom"><?php echo htmlspecialchars(
+        $unit["tipe"],
+      ); ?></td>
+      <td class="border-bottom">Rp <?php echo number_format(
+        $unit["harga"],
+        0,
+        ",",
+        ".",
+      ); ?></td>
       <td class="border-bottom">
-      <span class="badge <?php echo $unit['status'] === 'Tersedia' ? 'bg-success' : 'bg-danger'; ?> bg-opacity-25 <?php echo $unit['status'] === 'Tersedia' ? 'text-success' : 'text-danger'; ?> border <?php echo $unit['status'] === 'Tersedia' ? 'border-success' : 'border-danger'; ?> border-opacity-50 px-3 py-2 rounded-pill">
-        <?php echo htmlspecialchars($unit['status']); ?>
+      <span class="badge <?php echo $unit["status"] === "Tersedia"
+        ? "bg-success"
+        : "bg-danger"; ?> bg-opacity-25 <?php echo $unit["status"] ===
+ "Tersedia"
+   ? "text-success"
+   : "text-danger"; ?> border <?php echo $unit["status"] === "Tersedia"
+   ? "border-success"
+   : "border-danger"; ?> border-opacity-50 px-3 py-2 rounded-pill">
+        <?php echo htmlspecialchars($unit["status"]); ?>
       </span>
       </td>
       <td class="border-bottom">
       <div class="d-flex gap-2">
-        <a href="edit.php?id=<?php echo $unit['id']; ?>" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+        <a href="edit.php?id=<?php echo $unit[
+          "id"
+        ]; ?>" class="btn btn-sm btn-outline-dark rounded-pill px-3">
         <i class="bi bi-pencil"></i> Edit
         </a>
-        <button onclick="confirmDelete(<?php echo $unit['id']; ?>)" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+        <button onclick="confirmDelete(<?php echo $unit[
+          "id"
+        ]; ?>)" class="btn btn-sm btn-outline-danger rounded-pill px-3">
         <i class="bi bi-trash"></i> Hapus
         </button>
       </div>
       </td>
       </tr>
-    <?php endforeach; ?>
+    <?php endforeach;
+    ?>
     <?php endif; ?>
     </tbody>
     </table>

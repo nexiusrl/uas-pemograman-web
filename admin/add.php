@@ -1,62 +1,77 @@
 <?php
-require_once '../includes/db.php';
-require_once '../includes/auth.php';
+require_once "../includes/db.php";
+require_once "../includes/auth.php";
 
-$error_message = '';
+$error_message = "";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-$nama_unit = trim($_POST['nama_unit'] ?? '');
-$tipe = trim($_POST['tipe'] ?? '');
-$harga = trim($_POST['harga'] ?? '');
-$status = trim($_POST['status'] ?? 'Tersedia');
-$deskripsi = trim($_POST['deskripsi'] ?? '');
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  $nama_unit = trim($_POST["nama_unit"] ?? "");
+  $tipe = trim($_POST["tipe"] ?? "");
+  $harga = trim($_POST["harga"] ?? "");
+  $status = trim($_POST["status"] ?? "Tersedia");
+  $deskripsi = trim($_POST["deskripsi"] ?? "");
 
-// Cek input
-if (empty($nama_unit) || empty($tipe) || empty($harga) || empty($deskripsi)) {
-  $error_message = 'Semua kolom data unit wajib diisi.';
-} elseif (!is_numeric($harga) || $harga <= 0) {
-  $error_message = 'Harga harus berupa angka positif.';
-} else {
-  // Cek gambar
-  if (!isset($_FILES['gambar']) || $_FILES['gambar']['error'] !== UPLOAD_ERR_OK) {
-    $error_message = 'Gambar unit wajib diunggah.';
+  // Cek input
+  if (empty($nama_unit) || empty($tipe) || empty($harga) || empty($deskripsi)) {
+    $error_message = "Semua kolom data unit wajib diisi.";
+  } elseif (!is_numeric($harga) || $harga <= 0) {
+    $error_message = "Harga harus berupa angka positif.";
   } else {
-    $file = $_FILES['gambar'];
-    $allowed_types = ['image/jpeg', 'image/png', 'image/jpg'];
-    $file_type = mime_content_type($file['tmp_name']);
-    
-    if (!in_array($file_type, $allowed_types)) {
-    $error_message = 'Format gambar tidak valid. Gunakan file JPG, JPEG, atau PNG.';
-    } elseif ($file['size'] > 2 * 1024 * 1024) {
-    $error_message = 'Ukuran gambar maksimal 2MB.';
+    // Cek gambar
+    if (
+      !isset($_FILES["gambar"]) ||
+      $_FILES["gambar"]["error"] !== UPLOAD_ERR_OK
+    ) {
+      $error_message = "Gambar unit wajib diunggah.";
     } else {
-    // Pindahkan file ke folder img
-    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $new_filename = time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
-    $upload_path = '../img/' . $new_filename;
+      $file = $_FILES["gambar"];
+      $allowed_types = ["image/jpeg", "image/png", "image/jpg"];
+      $file_type = mime_content_type($file["tmp_name"]);
 
-    if (move_uploaded_file($file['tmp_name'], $upload_path)) {
-    $query = "INSERT INTO housing_units (nama_unit, tipe, harga, status, gambar, deskripsi) VALUES (?, ?, ?, ?, ?, ?)";
-    $stmt = mysqli_prepare($conn, $query);
-    if ($stmt) {
-      mysqli_stmt_bind_param($stmt, "ssdsss", $nama_unit, $tipe, $harga, $status, $new_filename, $deskripsi);
-      if (mysqli_stmt_execute($stmt)) {
-        mysqli_stmt_close($stmt);
-        header("Location: dashboard.php?status=added");
-        exit();
+      if (!in_array($file_type, $allowed_types)) {
+        $error_message =
+          "Format gambar tidak valid. Gunakan file JPG, JPEG, atau PNG.";
+      } elseif ($file["size"] > 2 * 1024 * 1024) {
+        $error_message = "Ukuran gambar maksimal 2MB.";
       } else {
-        $error_message = 'Gagal menyimpan ke database. Eror: ' . mysqli_error($conn);
+        // Pindahkan file ke folder img
+        $ext = pathinfo($file["name"], PATHINFO_EXTENSION);
+        $new_filename = time() . "_" . bin2hex(random_bytes(4)) . "." . $ext;
+        $upload_path = "../img/" . $new_filename;
+
+        if (move_uploaded_file($file["tmp_name"], $upload_path)) {
+          $query =
+            "INSERT INTO housing_units (nama_unit, tipe, harga, status, gambar, deskripsi) VALUES (?, ?, ?, ?, ?, ?)";
+          $stmt = mysqli_prepare($conn, $query);
+          if ($stmt) {
+            mysqli_stmt_bind_param(
+              $stmt,
+              "ssdsss",
+              $nama_unit,
+              $tipe,
+              $harga,
+              $status,
+              $new_filename,
+              $deskripsi,
+            );
+            if (mysqli_stmt_execute($stmt)) {
+              mysqli_stmt_close($stmt);
+              header("Location: dashboard.php?status=added");
+              exit();
+            } else {
+              $error_message =
+                "Gagal menyimpan ke database. Eror: " . mysqli_error($conn);
+            }
+            mysqli_stmt_close($stmt);
+          } else {
+            $error_message = "Gagal menyiapkan query database.";
+          }
+        } else {
+          $error_message = "Gagal mengunggah gambar ke server.";
+        }
       }
-      mysqli_stmt_close($stmt);
-    } else {
-      $error_message = 'Gagal menyiapkan query database.';
-    }
-    } else {
-    $error_message = 'Gagal mengunggah gambar ke server.';
-    }
     }
   }
-}
 }
 ?>
 <!doctype html>
@@ -119,7 +134,9 @@ if (empty($nama_unit) || empty($tipe) || empty($harga) || empty($deskripsi)) {
 
   <?php if (!empty($error_message)): ?>
   <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
-    <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo htmlspecialchars($error_message); ?>
+    <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo htmlspecialchars(
+      $error_message,
+    ); ?>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   <?php endif; ?>

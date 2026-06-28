@@ -1,100 +1,121 @@
 <?php
-require_once '../includes/db.php';
-require_once '../includes/auth.php';
+require_once "../includes/db.php";
+require_once "../includes/auth.php";
 
-$id = $_GET['id'] ?? '';
+$id = $_GET["id"] ?? "";
 if (empty($id)) {
-header("Location: dashboard.php");
-exit();
+  header("Location: dashboard.php");
+  exit();
 }
 
 // Ambil data unit berdasarkan ID
 $query = "SELECT * FROM housing_units WHERE id = ?";
 $stmt = mysqli_prepare($conn, $query);
 if ($stmt) {
-mysqli_stmt_bind_param($stmt, "i", $id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$unit = mysqli_fetch_assoc($result);
-mysqli_stmt_close($stmt);
+  mysqli_stmt_bind_param($stmt, "i", $id);
+  mysqli_stmt_execute($stmt);
+  $result = mysqli_stmt_get_result($stmt);
+  $unit = mysqli_fetch_assoc($result);
+  mysqli_stmt_close($stmt);
 
-if (!$unit) {
-  header("Location: dashboard.php");
-  exit();
-}
-} else {
-die("Kesalahan sistem: Gagal menyiapkan kueri.");
-}
-
-$error_message = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-$nama_unit = trim($_POST['nama_unit'] ?? '');
-$tipe = trim($_POST['tipe'] ?? '');
-$harga = trim($_POST['harga'] ?? '');
-$status = trim($_POST['status'] ?? 'Tersedia');
-$deskripsi = trim($_POST['deskripsi'] ?? '');
-$gambar_nama = $unit['gambar']; // default pakai gambar lama
-
-// Cek input
-if (empty($nama_unit) || empty($tipe) || empty($harga) || empty($deskripsi)) {
-  $error_message = 'Semua kolom data unit wajib diisi.';
-} elseif (!is_numeric($harga) || $harga <= 0) {
-  $error_message = 'Harga harus berupa angka positif.';
-} else {
-  // Cek apakah ada unggahan gambar baru
-  $gambar_diunggah = isset($_FILES['gambar']) && $_FILES['gambar']['error'] === UPLOAD_ERR_OK;
-  $upload_ok = true;
-
-  if ($gambar_diunggah) {
-    $file = $_FILES['gambar'];
-    $allowed_types = ['image/jpeg', 'image/png', 'image/jpg'];
-    $file_type = mime_content_type($file['tmp_name']);
-    
-    if (!in_array($file_type, $allowed_types)) {
-    $error_message = 'Format gambar tidak valid. Gunakan file JPG, JPEG, atau PNG.';
-    $upload_ok = false;
-    } elseif ($file['size'] > 2 * 1024 * 1024) {
-    $error_message = 'Ukuran gambar maksimal 2MB.';
-    $upload_ok = false;
-    } else {
-    // Pindahkan file ke folder img
-    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-    $new_filename = time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
-    $upload_path = '../img/' . $new_filename;
-
-    if (move_uploaded_file($file['tmp_name'], $upload_path)) {
-    $gambar_nama = $new_filename;
-    // Hapus gambar lama jika ada dan bukan gambar default seed
-    $old_file = '../img/' . $unit['gambar'];
-    if (file_exists($old_file) && !in_array($unit['gambar'], ['onyx.jpg', 'green-crystal.jpg', 'the-morizen.jpg'])) {
-      @unlink($old_file);
-    }
-    } else {
-    $error_message = 'Gagal mengunggah gambar ke server.';
-    $upload_ok = false;
-    }
-    }
-  }
-
-  if ($upload_ok) {
-    $query = "UPDATE housing_units SET nama_unit = ?, tipe = ?, harga = ?, status = ?, gambar = ?, deskripsi = ? WHERE id = ?";
-    $stmt = mysqli_prepare($conn, $query);
-    if ($stmt) {
-    mysqli_stmt_bind_param($stmt, "ssdsssi", $nama_unit, $tipe, $harga, $status, $gambar_nama, $deskripsi, $id);
-    if (mysqli_stmt_execute($stmt)) {
-    mysqli_stmt_close($stmt);
-    header("Location: dashboard.php?status=updated");
+  if (!$unit) {
+    header("Location: dashboard.php");
     exit();
-    } else {
-    $error_message = 'Gagal memperbarui database. Eror: ' . mysqli_error($conn);
+  }
+} else {
+  die("Kesalahan sistem: Gagal menyiapkan kueri.");
+}
+
+$error_message = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  $nama_unit = trim($_POST["nama_unit"] ?? "");
+  $tipe = trim($_POST["tipe"] ?? "");
+  $harga = trim($_POST["harga"] ?? "");
+  $status = trim($_POST["status"] ?? "Tersedia");
+  $deskripsi = trim($_POST["deskripsi"] ?? "");
+  $gambar_nama = $unit["gambar"]; // default pakai gambar lama
+
+  // Cek input
+  if (empty($nama_unit) || empty($tipe) || empty($harga) || empty($deskripsi)) {
+    $error_message = "Semua kolom data unit wajib diisi.";
+  } elseif (!is_numeric($harga) || $harga <= 0) {
+    $error_message = "Harga harus berupa angka positif.";
+  } else {
+    // Cek apakah ada unggahan gambar baru
+    $gambar_diunggah =
+      isset($_FILES["gambar"]) && $_FILES["gambar"]["error"] === UPLOAD_ERR_OK;
+    $upload_ok = true;
+
+    if ($gambar_diunggah) {
+      $file = $_FILES["gambar"];
+      $allowed_types = ["image/jpeg", "image/png", "image/jpg"];
+      $file_type = mime_content_type($file["tmp_name"]);
+
+      if (!in_array($file_type, $allowed_types)) {
+        $error_message =
+          "Format gambar tidak valid. Gunakan file JPG, JPEG, atau PNG.";
+        $upload_ok = false;
+      } elseif ($file["size"] > 2 * 1024 * 1024) {
+        $error_message = "Ukuran gambar maksimal 2MB.";
+        $upload_ok = false;
+      } else {
+        // Pindahkan file ke folder img
+        $ext = pathinfo($file["name"], PATHINFO_EXTENSION);
+        $new_filename = time() . "_" . bin2hex(random_bytes(4)) . "." . $ext;
+        $upload_path = "../img/" . $new_filename;
+
+        if (move_uploaded_file($file["tmp_name"], $upload_path)) {
+          $gambar_nama = $new_filename;
+          // Hapus gambar lama jika ada dan bukan gambar default seed
+          $old_file = "../img/" . $unit["gambar"];
+          if (
+            file_exists($old_file) &&
+            !in_array($unit["gambar"], [
+              "onyx.jpg",
+              "green-crystal.jpg",
+              "the-morizen.jpg",
+            ])
+          ) {
+            @unlink($old_file);
+          }
+        } else {
+          $error_message = "Gagal mengunggah gambar ke server.";
+          $upload_ok = false;
+        }
+      }
     }
-    mysqli_stmt_close($stmt);
-    } else {
-    $error_message = 'Gagal menyiapkan query database.';
+
+    if ($upload_ok) {
+      $query =
+        "UPDATE housing_units SET nama_unit = ?, tipe = ?, harga = ?, status = ?, gambar = ?, deskripsi = ? WHERE id = ?";
+      $stmt = mysqli_prepare($conn, $query);
+      if ($stmt) {
+        mysqli_stmt_bind_param(
+          $stmt,
+          "ssdsssi",
+          $nama_unit,
+          $tipe,
+          $harga,
+          $status,
+          $gambar_nama,
+          $deskripsi,
+          $id,
+        );
+        if (mysqli_stmt_execute($stmt)) {
+          mysqli_stmt_close($stmt);
+          header("Location: dashboard.php?status=updated");
+          exit();
+        } else {
+          $error_message =
+            "Gagal memperbarui database. Eror: " . mysqli_error($conn);
+        }
+        mysqli_stmt_close($stmt);
+      } else {
+        $error_message = "Gagal menyiapkan query database.";
+      }
     }
   }
-}
 }
 ?>
 <!doctype html>
@@ -157,7 +178,9 @@ if (empty($nama_unit) || empty($tipe) || empty($harga) || empty($deskripsi)) {
 
   <?php if (!empty($error_message)): ?>
   <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
-    <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo htmlspecialchars($error_message); ?>
+    <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo htmlspecialchars(
+      $error_message,
+    ); ?>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   <?php endif; ?>
@@ -170,30 +193,42 @@ if (empty($nama_unit) || empty($tipe) || empty($harga) || empty($deskripsi)) {
     <h5 class="mb-0" style="font-weight: 600;">Edit Detail Unit</h5>
     </div>
     <div class="card-body px-4 pb-4">
-    <form id="editUnitForm" action="edit.php?id=<?php echo $unit['id']; ?>" method="POST" enctype="multipart/form-data">
+    <form id="editUnitForm" action="edit.php?id=<?php echo $unit[
+      "id"
+    ]; ?>" method="POST" enctype="multipart/form-data">
     <div class="row">
     <div class="col-md-6 mb-4">
       <label for="nama_unit" class="form-label small fw-bold text-uppercase text-muted">Nama Unit</label>
-      <input type="text" class="form-control rounded-3" id="nama_unit" name="nama_unit" value="<?php echo htmlspecialchars($unit['nama_unit']); ?>" style="padding: 10px 15px;" />
+      <input type="text" class="form-control rounded-3" id="nama_unit" name="nama_unit" value="<?php echo htmlspecialchars(
+        $unit["nama_unit"],
+      ); ?>" style="padding: 10px 15px;" />
       <div class="invalid-feedback">Nama unit harus diisi.</div>
     </div>
     <div class="col-md-6 mb-4">
       <label for="tipe" class="form-label small fw-bold text-uppercase text-muted">Tipe / Style</label>
-      <input type="text" class="form-control rounded-3" id="tipe" name="tipe" value="<?php echo htmlspecialchars($unit['tipe']); ?>" style="padding: 10px 15px;" />
+      <input type="text" class="form-control rounded-3" id="tipe" name="tipe" value="<?php echo htmlspecialchars(
+        $unit["tipe"],
+      ); ?>" style="padding: 10px 15px;" />
       <div class="invalid-feedback">Tipe unit harus diisi.</div>
     </div>
     </div>
     <div class="row">
     <div class="col-md-6 mb-4">
       <label for="harga" class="form-label small fw-bold text-uppercase text-muted">Harga (Rp)</label>
-      <input type="number" class="form-control rounded-3" id="harga" name="harga" value="<?php echo htmlspecialchars(intval($unit['harga'])); ?>" style="padding: 10px 15px;" />
+      <input type="number" class="form-control rounded-3" id="harga" name="harga" value="<?php echo htmlspecialchars(
+        intval($unit["harga"]),
+      ); ?>" style="padding: 10px 15px;" />
       <div class="invalid-feedback">Harga harus berupa angka positif.</div>
     </div>
     <div class="col-md-6 mb-4">
       <label for="status" class="form-label small fw-bold text-uppercase text-muted">Status Unit</label>
       <select class="form-select rounded-3" id="status" name="status" style="padding: 10px 15px;">
-      <option value="Tersedia" <?php echo $unit['status'] === 'Tersedia' ? 'selected' : ''; ?>>Tersedia</option>
-      <option value="Terjual" <?php echo $unit['status'] === 'Terjual' ? 'selected' : ''; ?>>Terjual</option>
+      <option value="Tersedia" <?php echo $unit["status"] === "Tersedia"
+        ? "selected"
+        : ""; ?>>Tersedia</option>
+      <option value="Terjual" <?php echo $unit["status"] === "Terjual"
+        ? "selected"
+        : ""; ?>>Terjual</option>
       </select>
     </div>
     </div>
@@ -201,15 +236,19 @@ if (empty($nama_unit) || empty($tipe) || empty($harga) || empty($deskripsi)) {
     <label for="gambar" class="form-label small fw-bold text-uppercase text-muted">Ubah Gambar Unit (Opsional)</label>
     <input type="file" class="form-control rounded-3 mb-2" id="gambar" name="gambar" accept="image/png, image/jpeg, image/jpg" style="padding: 10px 15px;" />
     <div class="invalid-feedback">Silakan pilih file gambar (JPG/PNG) yang valid.</div>
-    
+
     <div class="mt-3">
       <p class="small text-muted mb-1">Gambar saat ini:</p>
-      <img src="../img/<?php echo htmlspecialchars($unit['gambar']); ?>" alt="Current Image" class="img-thumbnail rounded-2 shadow-sm" style="max-height: 120px;" />
+      <img src="../img/<?php echo htmlspecialchars(
+        $unit["gambar"],
+      ); ?>" alt="Current Image" class="img-thumbnail rounded-2 shadow-sm" style="max-height: 120px;" />
     </div>
     </div>
     <div class="mb-4">
     <label for="deskripsi" class="form-label small fw-bold text-uppercase text-muted">Deskripsi / Spesifikasi</label>
-    <textarea class="form-control rounded-3" id="deskripsi" name="deskripsi" rows="4" style="padding: 10px 15px;"><?php echo htmlspecialchars($unit['deskripsi']); ?></textarea>
+    <textarea class="form-control rounded-3" id="deskripsi" name="deskripsi" rows="4" style="padding: 10px 15px;"><?php echo htmlspecialchars(
+      $unit["deskripsi"],
+    ); ?></textarea>
     <div class="invalid-feedback">Deskripsi unit harus diisi.</div>
     </div>
     <button type="submit" class="btn btn-dark-minimal py-3 px-5 rounded-3 text-uppercase fw-bold" style="font-size: 0.85rem; letter-spacing: 1px;">

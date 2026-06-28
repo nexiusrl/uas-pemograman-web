@@ -1,17 +1,17 @@
 <?php
-require_once '../includes/db.php';
-require_once '../includes/auth.php';
+require_once "../includes/db.php";
+require_once "../includes/auth.php";
 
 // Ambil data semua pesan customer
 $query = "SELECT * FROM contact_messages ORDER BY tanggal_kirim DESC";
 $result = mysqli_query($conn, $query);
 $messages = [];
 if ($result) {
-while ($row = mysqli_fetch_assoc($result)) {
-  $messages[] = $row;
-}
+  while ($row = mysqli_fetch_assoc($result)) {
+    $messages[] = $row;
+  }
 } else {
-die("Gagal memuat pesan: " . mysqli_error($conn));
+  die("Gagal memuat pesan: " . mysqli_error($conn));
 }
 ?>
 <!doctype html>
@@ -92,20 +92,34 @@ die("Gagal memuat pesan: " . mysqli_error($conn));
       <td colspan="5" class="text-center py-4 text-muted">Belum ada pesan masuk.</td>
     </tr>
     <?php else: ?>
-    <?php $no = 1; foreach ($messages as $msg): ?>
+    <?php
+    $no = 1;
+    foreach ($messages as $msg): ?>
       <tr>
       <td class="px-3 border-bottom align-top pt-3"><?php echo $no++; ?></td>
-      <td class="fw-bold border-bottom align-top pt-3"><?php echo htmlspecialchars($msg['nama']); ?></td>
+      <td class="fw-bold border-bottom align-top pt-3"><?php echo htmlspecialchars(
+        $msg["nama"],
+      ); ?></td>
       <td class="border-bottom align-top pt-3">
       <div class="small">
-        <span class="d-block"><i class="bi bi-envelope me-1 text-muted"></i><?php echo htmlspecialchars($msg['email']); ?></span>
-        <span class="d-block mt-1"><i class="bi bi-telephone me-1 text-muted"></i><?php echo htmlspecialchars($msg['telepon']); ?></span>
+        <span class="d-block"><i class="bi bi-envelope me-1 text-muted"></i><?php echo htmlspecialchars(
+          $msg["email"],
+        ); ?></span>
+        <span class="d-block mt-1"><i class="bi bi-telephone me-1 text-muted"></i><?php echo htmlspecialchars(
+          $msg["telepon"],
+        ); ?></span>
       </div>
       </td>
-      <td class="border-bottom align-top pt-3 text-wrap" style="max-width: 400px;"><?php echo nl2br(htmlspecialchars($msg['pesan'])); ?></td>
-      <td class="border-bottom align-top pt-3 text-muted small"><?php echo date('d-m-Y H:i', strtotime($msg['tanggal_kirim'])); ?> WIB</td>
+      <td class="border-bottom align-top pt-3 text-wrap" style="max-width: 400px;"><?php echo nl2br(
+        htmlspecialchars($msg["pesan"]),
+      ); ?></td>
+      <td class="border-bottom align-top pt-3 text-muted small"><?php echo date(
+        "d-m-Y H:i",
+        strtotime($msg["tanggal_kirim"]),
+      ); ?> WIB</td>
       </tr>
-    <?php endforeach; ?>
+    <?php endforeach;
+    ?>
     <?php endif; ?>
     </tbody>
     </table>
