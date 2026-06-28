@@ -25,10 +25,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       $error_message = "Gambar unit wajib diunggah.";
     } else {
       $file = $_FILES["gambar"];
-      $allowed_types = ["image/jpeg", "image/png", "image/jpg"];
-      $file_type = mime_content_type($file["tmp_name"]);
+      $ext = strtolower(pathinfo($file["name"], PATHINFO_EXTENSION));
+      $allowed_exts = ["jpg", "jpeg", "png"];
+      $image_info = @getimagesize($file["tmp_name"]);
 
-      if (!in_array($file_type, $allowed_types)) {
+      if (!in_array($ext, $allowed_exts) || !$image_info) {
         $error_message =
           "Format gambar tidak valid. Gunakan file JPG, JPEG, atau PNG.";
       } elseif ($file["size"] > 2 * 1024 * 1024) {
