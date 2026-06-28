@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS summarecon_db;
-USE summarecon_db;
+CREATE DATABASE IF NOT EXISTS db_summarecon;
+USE db_summarecon;
 
 -- Tabel untuk otentikasi administrator
 CREATE TABLE IF NOT EXISTS users (
@@ -36,7 +36,7 @@ TRUNCATE TABLE users;
 TRUNCATE TABLE housing_units;
 
 -- Insert user default admin (password: admin123)
-INSERT INTO users (username, password) VALUES 
+INSERT INTO users (username, password) VALUES
 ('admin', '$2y$12$85V5YPcdBr1j5V3msr.x.OhRHedC0ISD1WxylH8M8ifJt.igKVa9q');
 
 -- Insert unit perumahan default
