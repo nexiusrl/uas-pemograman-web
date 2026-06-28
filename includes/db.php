@@ -1,13 +1,13 @@
 <?php
-$host = 'localhost';
-$db   = 'db_summarecon';
-$user = 'root';
-$pass = '';
+$host = "localhost";
+$db = "db_summarecon";
+$user = "root";
+$pass = "";
 
 $conn = mysqli_connect($host, $user, $pass, $db);
 
 if (!$conn) {
-    die("Koneksi database gagal: " . mysqli_connect_error());
+  die("Koneksi database gagal: " . mysqli_connect_error());
 }
 
 // Set charset to utf8mb4

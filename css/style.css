@@ -1,21 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;600;700;800&display=swap");
 
 :root {
-  --primary-color: #0B132B;
+  --primary-color: #0b132b;
   /* Midnight Blue */
-  --secondary-color: #1C2541;
+  --secondary-color: #1c2541;
   /* Navy */
-  --accent-color: #D4AF37;
+  --accent-color: #d4af37;
   /* Gold */
   --text-dark: #333333;
-  --text-light: #F8F9FA;
-  --bg-light: #FDFDFD;
-  --bg-gray: #F4F6F9;
+  --text-light: #f8f9fa;
+  --bg-light: #fdfdfd;
+  --bg-gray: #f4f6f9;
   --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   color: var(--text-dark);
   line-height: 1.7;
   background-color: var(--bg-light);
@@ -28,7 +28,7 @@ h4,
 h5,
 h6,
 .navbar-brand {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   color: var(--primary-color);
   font-weight: 700;
 }
@@ -69,7 +69,8 @@ h6,
 /* Hero Section */
 .hero-section {
   position: relative;
-  background: url('https://cdn.antaranews.com/cache/1200x800/2023/11/27/Summarecon.jpg.webp') no-repeat center center;
+  background: url("https://cdn.antaranews.com/cache/1200x800/2023/11/27/Summarecon.jpg.webp")
+    no-repeat center center;
   background-size: cover;
   height: 90vh;
   display: flex;
@@ -80,13 +81,17 @@ h6,
 }
 
 .hero-section::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(11, 19, 43, 0.85) 0%, rgba(28, 37, 65, 0.6) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(11, 19, 43, 0.85) 0%,
+    rgba(28, 37, 65, 0.6) 100%
+  );
   z-index: 1;
 }
 
@@ -109,7 +114,7 @@ h6,
   text-transform: uppercase;
   letter-spacing: 1.5px;
   font-size: 0.85rem;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-weight: 600;
   transition: var(--transition);
   border: none;
@@ -167,7 +172,7 @@ section {
 }
 
 .section-title::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -183,7 +188,9 @@ section {
 }
 
 .card-hover {
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
 }
 
 .card-hover:hover {
@@ -270,7 +277,7 @@ footer a:hover {
   transition: var(--transition);
 }
 
-.admin-sidebar .nav-link:hover, 
+.admin-sidebar .nav-link:hover,
 .admin-sidebar .nav-link.active {
   color: white !important;
   background-color: rgba(255, 255, 255, 0.1);
@@ -280,4 +287,4 @@ footer a:hover {
 .admin-sidebar .nav-link.text-danger:hover {
   background-color: rgba(255, 107, 107, 0.15) !important;
   color: #ff6b6b !important;
-}
+}
