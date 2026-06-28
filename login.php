@@ -20,10 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($username) || empty($password)) {
         $error_message = 'Username dan password wajib diisi.';
     } else {
-        try {
-            $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
-            $stmt->execute([':username' => $username]);
-            $user = $stmt->fetch();
+        $query = "SELECT * FROM users WHERE username = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "s", $username);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            $user = mysqli_fetch_assoc($result);
+            mysqli_stmt_close($stmt);
 
             if ($user && password_verify($password, $user['password'])) {
                 $_SESSION['admin_logged_in'] = true;
@@ -33,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $error_message = 'Username atau password salah.';
             }
-        } catch (\PDOException $e) {
+        } else {
             $error_message = 'Terjadi kesalahan sistem. Silakan coba lagi.';
         }
     }

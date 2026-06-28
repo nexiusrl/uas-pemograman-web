@@ -3,11 +3,15 @@ require_once '../includes/db.php';
 require_once '../includes/auth.php';
 
 // Ambil semua unit dari database
-try {
-    $stmt = $pdo->query("SELECT * FROM housing_units ORDER BY id DESC");
-    $units = $stmt->fetchAll();
-} catch (\PDOException $e) {
-    die("Gagal memuat data: " . htmlspecialchars($e->getMessage()));
+$query = "SELECT * FROM housing_units ORDER BY id DESC";
+$result = mysqli_query($conn, $query);
+$units = [];
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $units[] = $row;
+    }
+} else {
+    die("Gagal memuat data: " . mysqli_error($conn));
 }
 ?>
 <!doctype html>

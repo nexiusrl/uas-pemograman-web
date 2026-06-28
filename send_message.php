@@ -13,20 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    try {
-        $stmt = $pdo->prepare("INSERT INTO contact_messages (nama, email, telepon, pesan) VALUES (:nama, :email, :telepon, :pesan)");
-        $stmt->execute([
-            ':nama' => $nama,
-            ':email' => $email,
-            ':telepon' => $telepon,
-            ':pesan' => $pesan
-        ]);
-        header("Location: index.php?status=success#kontak");
-        exit();
-    } catch (\PDOException $e) {
-        header("Location: index.php?status=error#kontak");
-        exit();
+    $query = "INSERT INTO contact_messages (nama, email, telepon, pesan) VALUES (?, ?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $query);
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "ssss", $nama, $email, $telepon, $pesan);
+        if (mysqli_stmt_execute($stmt)) {
+            mysqli_stmt_close($stmt);
+            header("Location: index.php?status=success#kontak");
+            exit();
+        }
     }
+    header("Location: index.php?status=error#kontak");
+    exit();
 } else {
     header("Location: index.php");
     exit();

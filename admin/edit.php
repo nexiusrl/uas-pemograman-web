@@ -9,17 +9,21 @@ if (empty($id)) {
 }
 
 // Ambil data unit berdasarkan ID
-try {
-    $stmt = $pdo->prepare("SELECT * FROM housing_units WHERE id = :id");
-    $stmt->execute([':id' => $id]);
-    $unit = $stmt->fetch();
+$query = "SELECT * FROM housing_units WHERE id = ?";
+$stmt = mysqli_prepare($conn, $query);
+if ($stmt) {
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $unit = mysqli_fetch_assoc($result);
+    mysqli_stmt_close($stmt);
 
     if (!$unit) {
         header("Location: dashboard.php");
         exit();
     }
-} catch (\PDOException $e) {
-    die("Kesalahan sistem: " . htmlspecialchars($e->getMessage()));
+} else {
+    die("Kesalahan sistem: Gagal menyiapkan kueri.");
 }
 
 $error_message = '';
@@ -74,21 +78,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($upload_ok) {
-            try {
-                $stmt = $pdo->prepare("UPDATE housing_units SET nama_unit = :nama_unit, tipe = :tipe, harga = :harga, status = :status, gambar = :gambar, deskripsi = :deskripsi WHERE id = :id");
-                $stmt->execute([
-                    ':nama_unit' => $nama_unit,
-                    ':tipe' => $tipe,
-                    ':harga' => $harga,
-                    ':status' => $status,
-                    ':gambar' => $gambar_nama,
-                    ':deskripsi' => $deskripsi,
-                    ':id' => $id
-                ]);
-                header("Location: dashboard.php?status=updated");
-                exit();
-            } catch (\PDOException $e) {
-                $error_message = 'Gagal memperbarui database. Eror: ' . $e->getMessage();
+            $query = "UPDATE housing_units SET nama_unit = ?, tipe = ?, harga = ?, status = ?, gambar = ?, deskripsi = ? WHERE id = ?";
+            $stmt = mysqli_prepare($conn, $query);
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, "ssdsssi", $nama_unit, $tipe, $harga, $status, $gambar_nama, $deskripsi, $id);
+                if (mysqli_stmt_execute($stmt)) {
+                    mysqli_stmt_close($stmt);
+                    header("Location: dashboard.php?status=updated");
+                    exit();
+                } else {
+                    $error_message = 'Gagal memperbarui database. Eror: ' . mysqli_error($conn);
+                }
+                mysqli_stmt_close($stmt);
+            } else {
+                $error_message = 'Gagal menyiapkan query database.';
             }
         }
     }

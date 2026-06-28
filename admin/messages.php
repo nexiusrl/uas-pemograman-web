@@ -3,11 +3,15 @@ require_once '../includes/db.php';
 require_once '../includes/auth.php';
 
 // Ambil data semua pesan customer
-try {
-    $stmt = $pdo->query("SELECT * FROM contact_messages ORDER BY tanggal_kirim DESC");
-    $messages = $stmt->fetchAll();
-} catch (\PDOException $e) {
-    die("Gagal memuat pesan: " . htmlspecialchars($e->getMessage()));
+$query = "SELECT * FROM contact_messages ORDER BY tanggal_kirim DESC";
+$result = mysqli_query($conn, $query);
+$messages = [];
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $messages[] = $row;
+    }
+} else {
+    die("Gagal memuat pesan: " . mysqli_error($conn));
 }
 ?>
 <!doctype html>

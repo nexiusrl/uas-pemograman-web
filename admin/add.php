@@ -36,20 +36,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $upload_path = '../img/' . $new_filename;
 
                 if (move_uploaded_file($file['tmp_name'], $upload_path)) {
-                    try {
-                        $stmt = $pdo->prepare("INSERT INTO housing_units (nama_unit, tipe, harga, status, gambar, deskripsi) VALUES (:nama_unit, :tipe, :harga, :status, :gambar, :deskripsi)");
-                        $stmt->execute([
-                            ':nama_unit' => $nama_unit,
-                            ':tipe' => $tipe,
-                            ':harga' => $harga,
-                            ':status' => $status,
-                            ':gambar' => $new_filename,
-                            ':deskripsi' => $deskripsi
-                        ]);
-                        header("Location: dashboard.php?status=added");
-                        exit();
-                    } catch (\PDOException $e) {
-                        $error_message = 'Gagal menyimpan ke database. Eror: ' . $e->getMessage();
+                    $query = "INSERT INTO housing_units (nama_unit, tipe, harga, status, gambar, deskripsi) VALUES (?, ?, ?, ?, ?, ?)";
+                    $stmt = mysqli_prepare($conn, $query);
+                    if ($stmt) {
+                        mysqli_stmt_bind_param($stmt, "ssdsss", $nama_unit, $tipe, $harga, $status, $new_filename, $deskripsi);
+                        if (mysqli_stmt_execute($stmt)) {
+                            mysqli_stmt_close($stmt);
+                            header("Location: dashboard.php?status=added");
+                            exit();
+                        } else {
+                            $error_message = 'Gagal menyimpan ke database. Eror: ' . mysqli_error($conn);
+                        }
+                        mysqli_stmt_close($stmt);
+                    } else {
+                        $error_message = 'Gagal menyiapkan query database.';
                     }
                 } else {
                     $error_message = 'Gagal mengunggah gambar ke server.';

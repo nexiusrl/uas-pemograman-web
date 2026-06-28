@@ -3,8 +3,14 @@ require_once 'includes/db.php';
 require_once 'includes/header.php';
 
 // Ambil data unit dari database
-$stmt = $pdo->query("SELECT * FROM housing_units ORDER BY id ASC");
-$units = $stmt->fetchAll();
+$query = "SELECT * FROM housing_units ORDER BY id ASC";
+$result = mysqli_query($conn, $query);
+$units = [];
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $units[] = $row;
+    }
+}
 ?>
 
 <!-- Hero Section -->

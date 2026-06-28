@@ -5,11 +5,15 @@ require_once '../includes/auth.php';
 $id = $_GET['id'] ?? '';
 
 if (!empty($id)) {
-    try {
-        // Ambil info unit terlebih dahulu untuk hapus gambar
-        $stmt = $pdo->prepare("SELECT gambar FROM housing_units WHERE id = :id");
-        $stmt->execute([':id' => $id]);
-        $unit = $stmt->fetch();
+    // Ambil info unit terlebih dahulu untuk hapus gambar
+    $query = "SELECT gambar FROM housing_units WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $unit = mysqli_fetch_assoc($result);
+        mysqli_stmt_close($stmt);
 
         if ($unit) {
             // Hapus file gambar di server jika bukan gambar seed bawaan
@@ -20,19 +24,19 @@ if (!empty($id)) {
             }
 
             // Hapus dari database
-            $stmt = $pdo->prepare("DELETE FROM housing_units WHERE id = :id");
-            $stmt->execute([':id' => $id]);
-
-            header("Location: dashboard.php?status=deleted");
-            exit();
-        } else {
-            header("Location: dashboard.php?status=error");
-            exit();
+            $query_del = "DELETE FROM housing_units WHERE id = ?";
+            $stmt_del = mysqli_prepare($conn, $query_del);
+            if ($stmt_del) {
+                mysqli_stmt_bind_param($stmt_del, "i", $id);
+                mysqli_stmt_execute($stmt_del);
+                mysqli_stmt_close($stmt_del);
+                header("Location: dashboard.php?status=deleted");
+                exit();
+            }
         }
-    } catch (\PDOException $e) {
-        header("Location: dashboard.php?status=error");
-        exit();
     }
+    header("Location: dashboard.php?status=error");
+    exit();
 } else {
     header("Location: dashboard.php");
     exit();
