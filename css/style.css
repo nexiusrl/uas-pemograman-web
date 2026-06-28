@@ -252,3 +252,32 @@ footer a:hover {
   margin-top: 60px;
   padding-top: 30px;
 }
+
+/* Admin Sidebar */
+.admin-sidebar {
+  background-color: var(--primary-color) !important;
+  min-height: 100vh;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin: 4px 15px;
+  transition: var(--transition);
+}
+
+.admin-sidebar .nav-link:hover, 
+.admin-sidebar .nav-link.active {
+  color: white !important;
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: none;
+}
+
+.admin-sidebar .nav-link.text-danger:hover {
+  background-color: rgba(255, 107, 107, 0.15) !important;
+  color: #ff6b6b !important;
+}
