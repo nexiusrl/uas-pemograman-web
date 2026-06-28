@@ -1,15 +1,15 @@
 <?php
-require_once 'includes/db.php';
-require_once 'includes/header.php';
+require_once "includes/db.php";
+require_once "includes/header.php";
 
 // Ambil data unit dari database
 $query = "SELECT * FROM housing_units ORDER BY id ASC";
 $result = mysqli_query($conn, $query);
 $units = [];
 if ($result) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $units[] = $row;
-    }
+  while ($row = mysqli_fetch_assoc($result)) {
+    $units[] = $row;
+  }
 }
 ?>
 
@@ -89,16 +89,35 @@ if ($result) {
               <div class="position-relative">
                 <span
                   class="badge bg-white text-dark position-absolute m-3 px-3 py-2 rounded-pill shadow-sm text-uppercase"
-                  style="top: 0; left: 0; z-index: 2; letter-spacing: 1px;"><?php echo htmlspecialchars($unit['tipe']); ?></span>
-                <img src="img/<?php echo htmlspecialchars($unit['gambar']); ?>" class="card-img-top object-fit-cover" alt="<?php echo htmlspecialchars($unit['nama_unit']); ?>" style="height: 280px;" />
+                  style="top: 0; left: 0; z-index: 2; letter-spacing: 1px;"><?php echo htmlspecialchars(
+                    $unit["tipe"],
+                  ); ?></span>
+                <img src="img/<?php echo htmlspecialchars(
+                  $unit["gambar"],
+                ); ?>" class="card-img-top object-fit-cover" alt="<?php echo htmlspecialchars(
+  $unit["nama_unit"],
+); ?>" style="height: 280px;" />
               </div>
               <div class="card-body p-4">
-                <h5 class="card-title h6 fw-bold text-uppercase mb-2"><?php echo htmlspecialchars($unit['nama_unit']); ?></h5>
-                <p class="small text-muted mb-2">Rp. <?php echo number_format($unit['harga'], 0, ',', '.'); ?></p>
-                <span class="badge <?php echo $unit['status'] === 'Tersedia' ? 'bg-success' : 'bg-danger'; ?> text-white mb-3" style="font-size: 0.7rem; font-weight: 500;"><?php echo htmlspecialchars($unit['status']); ?></span>
+                <h5 class="card-title h6 fw-bold text-uppercase mb-2"><?php echo htmlspecialchars(
+                  $unit["nama_unit"],
+                ); ?></h5>
+                <p class="small text-muted mb-2">Rp. <?php echo number_format(
+                  $unit["harga"],
+                  0,
+                  ",",
+                  ".",
+                ); ?></p>
+                <span class="badge <?php echo $unit["status"] === "Tersedia"
+                  ? "bg-success"
+                  : "bg-danger"; ?> text-white mb-3" style="font-size: 0.7rem; font-weight: 500;"><?php echo htmlspecialchars(
+   $unit["status"],
+ ); ?></span>
                 <hr class="my-3 opacity-10" />
                 <div class="d-flex small text-muted">
-                  <span><?php echo htmlspecialchars($unit['deskripsi']); ?></span>
+                  <span><?php echo htmlspecialchars(
+                    $unit["deskripsi"],
+                  ); ?></span>
                 </div>
               </div>
             </div>
@@ -117,12 +136,12 @@ if ($result) {
       <p class="text-muted">Kirim pesan kepada agen pemasaran kami untuk info unit selengkapnya.</p>
     </div>
 
-    <?php if (isset($_GET['status']) && $_GET['status'] === 'success'): ?>
+    <?php if (isset($_GET["status"]) && $_GET["status"] === "success"): ?>
       <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm border-0 mb-4" role="alert">
         <i class="bi bi-check-circle-fill me-2"></i> Pesan Anda berhasil dikirim! Agen kami akan segera menghubungi Anda.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
-    <?php elseif (isset($_GET['status']) && $_GET['status'] === 'error'): ?>
+    <?php elseif (isset($_GET["status"]) && $_GET["status"] === "error"): ?>
       <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm border-0 mb-4" role="alert">
         <i class="bi-exclamation-triangle-fill me-2"></i> Gagal mengirim pesan. Silakan coba lagi.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -157,4 +176,4 @@ if ($result) {
   </div>
 </section>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once "includes/footer.php"; ?>
