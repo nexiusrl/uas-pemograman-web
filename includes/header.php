@@ -30,24 +30,24 @@ if ($current_dir === "admin") {
 <nav class="navbar navbar-light bg-white sticky-top shadow-sm">
 <div class="container position-relative d-flex flex-wrap align-items-center justify-content-between">
 
-  <a class="navbar-brand" href="<?php echo $path_prefix; ?>index.php">SUMMARECON<span>MUTIARAMAKASSAR</span></a>
+<a class="navbar-brand" href="<?php echo $path_prefix; ?>index.php">SUMMARECON<span>MUTIARAMAKASSAR</span></a>
 
-  <div class="justify-content-end" id="navbarNav">
-  <ul class="navbar-nav flex-row flex-wrap align-items-center m-0 p-0 w-100 justify-content-end"
-  style="list-style: none; gap: 10px;">
-  <li class="nav-item px-2">
-    <a class="nav-link" href="<?php echo $path_prefix; ?>index.php">Beranda</a>
-  </li>
-  <li class="nav-item px-2">
-    <a class="nav-link" href="<?php echo $path_prefix; ?>index.php#deskripsi">Filosofi</a>
-  </li>
-  <li class="nav-item px-2">
-    <a class="nav-link" href="<?php echo $path_prefix; ?>index.php#galeri">Koleksi Unit</a>
-  </li>
-  <li class="nav-item px-2">
-    <a class="nav-link" href="<?php echo $path_prefix; ?>index.php#kontak">Hubungi Kami</a>
-  </li>
-  </ul>
-  </div>
+<div class="justify-content-end" id="navbarNav">
+<ul class="navbar-nav flex-row flex-wrap align-items-center m-0 p-0 w-100 justify-content-end"
+style="list-style: none; gap: 10px;">
+<li class="nav-item px-2">
+  <a class="nav-link" href="<?php echo $path_prefix; ?>index.php">Beranda</a>
+</li>
+<li class="nav-item px-2">
+  <a class="nav-link" href="<?php echo $path_prefix; ?>index.php#deskripsi">Filosofi</a>
+</li>
+<li class="nav-item px-2">
+  <a class="nav-link" href="<?php echo $path_prefix; ?>index.php#galeri">Koleksi Unit</a>
+</li>
+<li class="nav-item px-2">
+  <a class="nav-link" href="<?php echo $path_prefix; ?>index.php#kontak">Hubungi Kami</a>
+</li>
+</ul>
+</div>
 </div>
 </nav>

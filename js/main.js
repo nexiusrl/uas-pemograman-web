@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const namaUnit = document.getElementById("nama_unit");
       const tipe = document.getElementById("tipe");
       const harga = document.getElementById("harga");
+      const stok = document.getElementById("stok");
       const gambar = document.getElementById("gambar");
       const deskripsi = document.getElementById("deskripsi");
 
@@ -113,6 +114,17 @@ document.addEventListener("DOMContentLoaded", function () {
         isValid = false;
       } else {
         showValid(harga);
+      }
+
+      if (
+        stok.value.trim() === "" ||
+        isNaN(stok.value) ||
+        parseInt(stok.value) < 0
+      ) {
+        showInvalid(stok);
+        isValid = false;
+      } else {
+        showValid(stok);
       }
 
       if (!gambar.value) {
@@ -144,6 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const namaUnit = document.getElementById("nama_unit");
       const tipe = document.getElementById("tipe");
       const harga = document.getElementById("harga");
+      const stok = document.getElementById("stok");
       const deskripsi = document.getElementById("deskripsi");
 
       if (!namaUnit.value.trim()) {
@@ -169,6 +182,17 @@ document.addEventListener("DOMContentLoaded", function () {
         isValid = false;
       } else {
         showValid(harga);
+      }
+
+      if (
+        stok.value.trim() === "" ||
+        isNaN(stok.value) ||
+        parseInt(stok.value) < 0
+      ) {
+        showInvalid(stok);
+        isValid = false;
+      } else {
+        showValid(stok);
       }
 
       if (!deskripsi.value.trim()) {
