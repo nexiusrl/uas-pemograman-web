@@ -32,9 +32,9 @@ Aplikasi menggunakan **3 tabel** di dalam database `db_summarecon`:
 ---
 
 ### 5. Jelaskan secara singkat satu proses dalam proyek anda yang menggunakan JavaScript, dan tuliskan letak (nama file dan baris kode) dari proses tersebut!
-*   **Proses**: Validasi form kontak sisi klien (Client-side validation).
-*   **Penjelasan**: Sebelum data form dikirimkan ke server PHP di halaman utama, JavaScript mencegah submit form jika ada kolom input (nama, email, telepon, pesan) yang kosong atau format email tidak sesuai dengan standar regex. Jika input tidak valid, kelas Bootstrap `.is-invalid` ditambahkan untuk memberi visualisasi error merah kepada pengguna.
-*   **Letak**: [js/main.js](file:///D:/Dzul/Kuliah/Semester%204/Pemograman%20Web/uas-pemograman-web/js/main.js) baris 2–50.
+*   **Proses**: Kontrol tampilan jendela konfirmasi hapus unit (Vanilla JS Modal).
+*   **Penjelasan**: Saat admin mengklik tombol hapus pada dasbor, JavaScript secara dinamis mengatur atribut link hapus pada tombol konfirmasi di dalam modal, lalu memunculkan modal custom dengan mengubah gaya tampilan (`display: flex`) serta mematikan scroll layar utama (`overflow: hidden`). Sistem juga mendeteksi penutupan modal ketika tombol Batal diklik, area luar modal di-klik, atau tombol `Escape` pada keyboard ditekan.
+*   **Letak**: [js/main.js](file:///D:/Dzul/Kuliah/Semester%204/Pemograman%20Web/uas-pemograman-web/js/main.js) baris 223–259.
 
 ---
 
