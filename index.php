@@ -139,12 +139,12 @@ di Summarecon Mutiara Makassar.
 <?php if (isset($_GET["status"]) && $_GET["status"] === "success"): ?>
 <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm border-0 mb-4" role="alert">
 <i class="bi bi-check-circle-fill me-2"></i> Pesan Anda berhasil dikirim! Agen kami akan segera menghubungi Anda.
-<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<button type="button" class="btn-close" onclick="this.closest('.alert').remove()" aria-label="Close"></button>
 </div>
 <?php elseif (isset($_GET["status"]) && $_GET["status"] === "error"): ?>
 <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm border-0 mb-4" role="alert">
 <i class="bi-exclamation-triangle-fill me-2"></i> Gagal mengirim pesan. Silakan coba lagi.
-<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<button type="button" class="btn-close" onclick="this.closest('.alert').remove()" aria-label="Close"></button>
 </div>
 <?php endif; ?>
 

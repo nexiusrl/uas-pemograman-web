@@ -75,22 +75,22 @@ if ($result) {
 <?php if (isset($_GET["status"]) && $_GET["status"] === "added"): ?>
 <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
   <i class="bi bi-check-circle-fill me-2"></i> Unit perumahan berhasil ditambahkan!
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <button type="button" class="btn-close" onclick="this.closest('.alert').remove()" aria-label="Close"></button>
 </div>
 <?php elseif (isset($_GET["status"]) && $_GET["status"] === "updated"): ?>
 <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
   <i class="bi bi-check-circle-fill me-2"></i> Unit perumahan berhasil diperbarui!
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <button type="button" class="btn-close" onclick="this.closest('.alert').remove()" aria-label="Close"></button>
 </div>
 <?php elseif (isset($_GET["status"]) && $_GET["status"] === "deleted"): ?>
 <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
   <i class="bi bi-check-circle-fill me-2"></i> Unit perumahan berhasil dihapus!
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <button type="button" class="btn-close" onclick="this.closest('.alert').remove()" aria-label="Close"></button>
 </div>
 <?php elseif (isset($_GET["status"]) && $_GET["status"] === "error"): ?>
 <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4" role="alert">
   <i class="bi bi-exclamation-triangle-fill me-2"></i> Terjadi kesalahan dalam memproses data.
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <button type="button" class="btn-close" onclick="this.closest('.alert').remove()" aria-label="Close"></button>
 </div>
 <?php endif; ?>
 
@@ -228,27 +228,25 @@ if ($result) {
 </div>
 </div>
 
-<!-- Delete Confirmation Modal (Bootstrap) -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered">
+<!-- Delete Confirmation Modal (Vanilla CSS/JS) -->
+<div id="deleteModal" class="custom-modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="deleteModalLabel">
+<div class="custom-modal-dialog">
 <div class="modal-content rounded-4 border-0 shadow-lg">
 <div class="modal-header border-bottom-0 pt-4 px-4">
 <h5 class="modal-title fw-bold" id="deleteModalLabel">Konfirmasi Hapus</h5>
-<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<button type="button" class="btn-close" onclick="closeDeleteModal()" aria-label="Close"></button>
 </div>
 <div class="modal-body px-4 text-muted">
 Apakah Anda yakin ingin menghapus data unit ini secara permanen? Aksi ini tidak dapat dibatalkan.
 </div>
 <div class="modal-footer border-top-0 pb-4 px-4">
-<button type="button" class="btn btn-light px-4 py-2 rounded-3 fw-bold text-uppercase small" data-bs-dismiss="modal" style="font-size: 0.75rem;">Batal</button>
+<button type="button" class="btn btn-light px-4 py-2 rounded-3 fw-bold text-uppercase small" onclick="closeDeleteModal()" style="font-size: 0.75rem;">Batal</button>
 <a id="confirmDeleteBtn" href="#" class="btn btn-danger px-4 py-2 rounded-3 fw-bold text-uppercase text-white small" style="font-size: 0.75rem;">Hapus</a>
 </div>
 </div>
 </div>
 </div>
 
-<!-- Bootstrap JS Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Custom JS -->
 <script src="../js/main.js"></script>
 </body>

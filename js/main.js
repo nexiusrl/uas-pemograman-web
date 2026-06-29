@@ -225,9 +225,35 @@ function confirmDelete(id) {
   const confirmBtn = document.getElementById("confirmDeleteBtn");
   if (confirmBtn) {
     confirmBtn.setAttribute("href", "delete.php?id=" + id);
-    const deleteModal = new bootstrap.Modal(
-      document.getElementById("deleteModal"),
-    );
-    deleteModal.show();
+    const modal = document.getElementById("deleteModal");
+    if (modal) {
+      modal.setAttribute("aria-hidden", "false");
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
   }
 }
+
+function closeDeleteModal() {
+  const modal = document.getElementById("deleteModal");
+  if (modal) {
+    modal.setAttribute("aria-hidden", "true");
+    modal.style.display = "none";
+    document.body.style.overflow = "";
+  }
+}
+
+// Tutup modal jika klik area luar (overlay)
+document.addEventListener("click", function (e) {
+  const modal = document.getElementById("deleteModal");
+  if (modal && e.target === modal) {
+    closeDeleteModal();
+  }
+});
+
+// Tutup modal dengan tombol Escape
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") {
+    closeDeleteModal();
+  }
+});

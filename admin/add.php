@@ -150,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo htmlspecialchars(
     $error_message,
   ); ?>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <button type="button" class="btn-close" onclick="this.closest('.alert').remove()" aria-label="Close"></button>
 </div>
 <?php endif; ?>
 
@@ -225,8 +225,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </div>
 </div>
 
-<!-- Bootstrap JS Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Custom JS -->
 <script src="../js/main.js"></script>
 </body>
